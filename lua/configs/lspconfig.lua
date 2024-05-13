@@ -20,5 +20,10 @@ lspconfig.tsserver.setup {
   on_attach = on_attach,
   on_init = on_init,
   capabilities = capabilities,
-}
 
+  init_options = {
+    preferences = {
+      importModuleSpecifierPreference = 'relative',
+    }
+  }
+}
