@@ -31,12 +31,44 @@ require("lazy").setup({
   { import = "plugins" },
 }, lazy_config)
 
-require("telescope").load_extension "zoxide"
-vim.keymap.set("n", "<leader>cd", require("telescope").extensions.zoxide.list)
+local function close_buffers(close_all)
+  local bufs = vim.api.nvim_list_bufs()
+  local current_buf = vim.api.nvim_get_current_buf()
+
+  for _, i in ipairs(bufs) do
+    if i ~= current_buf or close_all == true then
+      vim.api.nvim_buf_delete(i, {})
+    end
+  end
+end
+
+local telescope = require "telescope"
+telescope.setup {
+  extensions = {
+    zoxide = {
+      prompt_title = "[ Walking on the shoulders of TJ ]",
+      mappings = {
+        default = {
+          after_action = function(selection)
+            print("Directory changed to " .. selection.path)
+            close_buffers(true)
+
+            local nvim_tree = require("nvim-tree.api").tree
+            nvim_tree.close()
+            nvim_tree.open()
+          end,
+        },
+      },
+    },
+  },
+}
+
+telescope.load_extension "zoxide"
+vim.keymap.set("n", "<leader>cd", telescope.extensions.zoxide.list)
 
 -- Shows list of all errors from LSP
-require "trouble"
-vim.keymap.set("n", "<leader>tt", require("trouble").toggle)
+local trouble = require "trouble"
+vim.keymap.set("n", "<leader>tt", trouble.toggle)
 
 -- LSP
 vim.keymap.set("n", "<leader>ge", vim.diagnostic.open_float, { desc = "Show diagnostic [e]rror message" })
@@ -66,16 +98,16 @@ dofile(vim.g.base46_cache .. "statusline")
 require "nvchad.autocmds"
 
 -- Git
-require('gitsigns').setup {
+require("gitsigns").setup {
   current_line_blame = true,
   current_line_blame_opts = {
-    delay = 1000
-  }
+    delay = 1000,
+  },
 }
 
 -- Status line
-require('hardline').setup {
-  theme = 'default'
+require("hardline").setup {
+  theme = "default",
 }
 
 vim.schedule(function()
