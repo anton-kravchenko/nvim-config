@@ -1,0 +1,256 @@
+NVIM_APPNAME=<dir_name> nvim - set config folder and run nvim
+:e $MYVIMRC - opens vim rc file
+
+L t h -> Select theme
+:TSInstall <language> - install language support
+:TSInstallInfo - show installed language support
+
+File tree:
+Ctrl + n - file tree
+m - mark file
+a - create a file
+c - copy file
+p - paste file
+r - rename File
+Ctrl + K - show file info
+
+Editing
+w - jump one word forwatd
+b - jump one word backward
+e - jump one word forward till the end of word
+E - jump till the end of word (including punctuation) 
+x - remove charecter under cursor
+X - remove character before cursor
+A - append to the end of line
+a - insert cursor after the cursor
+O - insert new line above current
+o - insert new line below current
+yy - copy line 
+p - paste line 
+r <character> - replace character below cursor 
+:R <file_path> - adds contents of the file at the cursor
+:w <file_name> - save file (or selected test) to a file
+:r !<cmd> - puts result from the command at the cursor
+:R <replace text> - replaces multiple characters
+ddp - move line down
+ddkP - move line up
+
+Move
+:m -3 - move 3 lines up
+:m +3 - move 3 lines down 
+:m 3 - move to the third line
+
+Copying text
+Y or yy - yank the whole line
+y - yank selected text
+y$ - yank till the end of line
+yiw - yank current word
+y^ - yank from start of the line till cursor
+yw - yank till the end of word under cursor
+y5w - yank 5 words
+p - paste text after cursor
+P - paste text before cursor
+yap - yank paragraph (current if in or next if on next line)
+y$ - yank till the end of line
+yiw - yank current word
+y^ - yank from start of the line till cursor
+
+Git 
+L g t - show git status 
+L c m - show git commits 
+
+Set
+:set ic - search ignoring case
+:set noic - disable search ignoring case
+:set is - show partial matches
+:set hls - highlight all matches
+:set no<cmd> - disable above commands
+:set inv<cmd> - invert cmd
+
+Text navigation (vim motions):
+3w - jump 3 words forward
+2b - jump 2 words backwards
+0 - jump to the start of the line
+Ctrl o - go to previous cursor location
+g; - go to previous change location
+g, - ho to next change location 
+:jumps - show the list of jumps
+{ - jump to previous paragraph
+} - jump to next paragraph
+] ) - jump to next closing )
+[ } - jump to previous closing }
+
+Change case
+u - to lower case
+U - to upper case
+
+Scrolling 
+Ctrl + e - scroll down (without moving cursor)
+Ctrl + y - scroll up (without moving cursor)
+Ctrl + b - scroll 1 page up
+Ctrl + f - scroll 1 page down
+Ctrl + u - scroll half a page up
+Ctrl + d - scroll half a page down
+
+Cursor
+Ctrl + g - show location in a file and file status 
+G - go to the end of file
+gg - go to the start of the file
+<number> G - go to line 
+jk - go to normal mode
+
+Search:
+? - search backwards in the current file
+/ - search forward in the current file
+n - next occurence
+N - previous occurence
+* - select all occurences of the workd under cursor
+
+Run terminal command
+:! <cmd> - runs external command
+
+Help:
+:help - opens help 
+L s h - opens help search (kickstart onlt)
+
+Matching parenthesis:
+% - goes to matching parenthesis
+
+Substitution:
+:s/one/two/ - replace the first occurence in the line 
+:s/one/two/g - replace all occurences in the line 
+:1,10s/one/two/g - replace all occurences on lines 1 to 10
+:%s/old/new/c - replace all occurences in the file
+:%s/old/new/gc - replace all occurences in the file with prompt
+
+Change:
+ciw - remove word under the cursor and go to insert mode
+cw - remove till the end of work under the cursor
+. - replay (work when using search, then making a change using c and then navigating to the next entry)
+viw - visually select word under cursor
+
+Registry
+:reg - opens registry of yanked text
+"3p - paste 3rd yanked text from the registry
+:7y - yank into 7th register
+"%p - pastes the name of the file being edited
+
+Macros
+q h <macro> q - q starts the macro, h is the registry for macro (can be anything) and q quits macro
+@h - replay macro from h registry
+5@h - replay macro h 5 times
+
+Editing (deleting)
+dw - delete until stat of next word
+de - delete until current word
+d$ - delete until the end of the curren line
+d2w - delete next 2 words
+dd - remove whole line
+D - remove thole line
+2dd - remove next 2 lines
+ce - remove till the end of work and jump to insert mode
+p - puts deleted text back
+L . - repeat last action
+
+Window manipulation
+Ctrl w o - close all other windows 
+Ctrl w v - split vertically
+Ctrl w s - split horizontally
+
+Selecting
+Shift + G - select till the end of file
+
+Undo/Redo
+u - undo 1 command
+U - undo all commands in the current line 
+Ctrl + R - redo
+
+Fuzzy find file
+L f f - search over all files 
+L f b - search over open files
+L f w - search over all files
+
+LSP
+gd - go to definition
+gr - look for references
+L l f - open floating diagnostics popup
+L + D - go to typ definition
+Ctrl + F - search for LSP by name
+L c a - code action (extract code into a function)
+L r a - rename
+K - hower type info
+L g e - show diagnostic error in a popup
+L g [ - previous error message
+L g ] - next error message
+L t t - toggle trouble window
+
+Mason
+:Mason - install LSPs
+
+Telescope
+:Telescope keymaps - show telescope keymaps
+:Telescope help_tags - show all vim configurations
+L cd - fuzzy find and open folder
+
+Cheat sheet:
+L c h - open cheet shett
+
+Line numbes 
+L n - toggle line number 
+L rn - toggle relative line number 
+
+Window navigation
+:sp - split horizontally 
+:vscp - split vertically
+Ctrl + hjkl - select Window
+Ctrl + w + q - close window
+
+Save file
+Ctrl S - saves file
+
+Directory
+:pwd - print current working directory
+:cd - change directory (to home)
+
+Tabs
+Tab - open next tab
+Shift Tab - open previous tab
+Space x - close tab
+
+Quit
+q - current window 
+qa - all windowns
+
+Terminal 
+L h - open terminal in horizontal window
+L v - open terminal in vertical window
+
+Packages
+Lazy sync - sync packages
+
+Dir/file navigation
+:e <dir/file name>
+
+Lua
+:lua print 'hello' - run Lua :lua vim.opt.number = false - hides numbers
+https://neovim.io/doc/user/lua-guide.html
+https://learnxinyminutes.com/docs/lua/
+
+K - show floating type info
+
+Formatting 
+= - fixes indents selected text 
+gg=G - fixes indents in the whole file
+
+# Custom config
+:source % - run init lua file
+
+
+# Key names
+<leader> - leader key
+<CR> - caret return (enter)
+<C-n> - control n
+
+Show recent open files
+:browse oldfiles
+

@@ -48,14 +48,30 @@ return {
   {
     "jvgrootveld/telescope-zoxide",
   },
-  { 'sbdchd/neoformat'},
+  { "sbdchd/neoformat" },
   {
-    "folke/trouble.nvim", dependencies = { "nvim-tree/nvim-web-devicons" }, opts = { position = "right", width = 85, multiline = true }
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = { position = "right", width = 85, multiline = true },
   },
   {
-    "lewis6991/gitsigns.nvim"
+    "lewis6991/gitsigns.nvim",
   },
   {
-    'ojroques/nvim-hardline'
-  }
+    "ojroques/nvim-hardline",
+  },
+  {
+    "yamatsum/nvim-cursorline",
+  },
+  {
+    "kylechui/nvim-surround",
+    version = "*",
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup {}
+    end,
+  },
+  {
+    "tpope/vim-surround",
+  },
 }

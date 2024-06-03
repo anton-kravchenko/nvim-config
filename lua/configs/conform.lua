@@ -5,7 +5,8 @@ local options = {
     html = { "prettier" },
     typescript = { "prettier" },
     javascript = { "prettier" },
-    markdown = { "prettier" }
+    markdown = { "prettier" },
+    json = { "prettier" }
   },
 
   format_on_save = {

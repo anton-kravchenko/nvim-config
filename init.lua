@@ -13,6 +13,8 @@ vim.opt.rtp:prepend(lazypath)
 vim.opt.shell = "fish"
 vim.opt.relativenumber = true
 vim.opt.number = true
+vim.opt.scrolloff = 5
+vim.opt.cursorline = true
 
 local lazy_config = require "configs.lazy"
 
@@ -37,7 +39,7 @@ local function close_buffers(close_all)
 
   for _, i in ipairs(bufs) do
     if i ~= current_buf or close_all == true then
-      vim.api.nvim_buf_delete(i, {})
+      vim.api.nvim_buf_delete(i, { force = true })
     end
   end
 end
@@ -46,7 +48,7 @@ local telescope = require "telescope"
 telescope.setup {
   extensions = {
     zoxide = {
-      prompt_title = "[ Walking on the shoulders of TJ ]",
+      prompt_title = "[ Choose directory ]",
       mappings = {
         default = {
           after_action = function(selection)
@@ -75,6 +77,10 @@ vim.keymap.set("n", "<leader>ge", vim.diagnostic.open_float, { desc = "Show diag
 vim.keymap.set("n", "<leader>g[", vim.diagnostic.goto_prev, { desc = "Go to previus [d]iagnostic message" })
 vim.keymap.set("n", "<leader>g]", vim.diagnostic.goto_next, { desc = "Go to next [d]iagnostic message" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open [d]iagnostic quick fix" })
+vim.keymap.set("n", "K", vim.diagnostic.setloclist, { desc = "Opens variable type hover" })
+
+-- Quit
+vim.keymap.set("n", "<leader>qa", ":wqa<CR>", { desc = "Save all and quit" })
 
 -- Navigation
 vim.keymap.set("n", "m", "3j")
@@ -113,3 +119,12 @@ require("hardline").setup {
 vim.schedule(function()
   require "mappings"
 end)
+
+require("nvim-cursorline").setup()
+
+require("nvim-surround").setup()
+
+-- Opens LSP references in the same view as open file
+vim.keymap.set("n", "<leader>gr", function()
+  vim.lsp.buf.references(nil, { loclist = true })
+end, { desc = "Open [r]eferences" })
