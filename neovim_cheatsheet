@@ -13,6 +13,7 @@ c - copy file
 p - paste file
 r - rename File
 Ctrl + K - show file info
+P - go to parent folder
 
 Editing
 w - jump one word forwatd
@@ -58,6 +59,7 @@ y^ - yank from start of the line till cursor
 Git 
 L g t - show git status 
 L c m - show git commits 
+L p h - preview git change
 
 Set
 :set ic - search ignoring case
@@ -122,6 +124,7 @@ Substitution:
 :1,10s/one/two/g - replace all occurences on lines 1 to 10
 :%s/old/new/c - replace all occurences in the file
 :%s/old/new/gc - replace all occurences in the file with prompt
+find src/ \( -name '*.tsx' -o -name '*.ts' \) | xargs sed -i "" 's/foo/bar/' - replace all occurences in `src`
 
 Change:
 ciw - remove word under the cursor and go to insert mode
@@ -156,6 +159,8 @@ Window manipulation
 Ctrl w o - close all other windows 
 Ctrl w v - split vertically
 Ctrl w s - split horizontally
+Ctrl w J - change layout horizontal
+Ctrl w L - change layout to vertical
 
 Selecting
 Shift + G - select till the end of file
@@ -167,8 +172,10 @@ Ctrl + R - redo
 
 Fuzzy find file
 L f f - search over all files 
+L f a - search over all files (including hidden)
 L f b - search over open files
 L f w - search over all files
+L f z - search over current buffer
 
 LSP
 gd - go to definition
@@ -191,6 +198,8 @@ Telescope
 :Telescope keymaps - show telescope keymaps
 :Telescope help_tags - show all vim configurations
 L cd - fuzzy find and open folder
+tkm - show Telescope keymaps (:Telescope keymaps)
+C q - send search results to quick list
 
 Cheat sheet:
 L c h - open cheet shett
@@ -254,3 +263,7 @@ gg=G - fixes indents in the whole file
 Show recent open files
 :browse oldfiles
 
+Mappings
+:nmap - for normal mode mappings
+:vmap - for visual mode mappings
+:imap - for insert mode mappings
