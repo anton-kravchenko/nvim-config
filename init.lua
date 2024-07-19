@@ -66,25 +66,26 @@ telescope.setup {
 }
 
 telescope.load_extension "zoxide"
-vim.keymap.set("n", "<leader>cd", telescope.extensions.zoxide.list)
+vim.keymap.set("n", "<leader>cd", telescope.extensions.zoxide.list, { desc = "Opens zoxide directory search" })
+vim.keymap.set("n", "tkm", ":Telescope keymaps<CR>", { desc = "Opens Telescope keybindings" })
 
 -- Shows list of all errors from LSP
 local trouble = require "trouble"
-vim.keymap.set("n", "<leader>tt", trouble.toggle)
-
+vim.keymap.set("n", "<leader>tt", ":Trouble diagnostics toggle<CR>")
 -- LSP
 vim.keymap.set("n", "<leader>ge", vim.diagnostic.open_float, { desc = "Show diagnostic [e]rror message" })
 vim.keymap.set("n", "<leader>g[", vim.diagnostic.goto_prev, { desc = "Go to previus [d]iagnostic message" })
 vim.keymap.set("n", "<leader>g]", vim.diagnostic.goto_next, { desc = "Go to next [d]iagnostic message" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open [d]iagnostic quick fix" })
-vim.keymap.set("n", "K", vim.diagnostic.setloclist, { desc = "Opens variable type hover" })
+vim.keymap.set("n", "KL", vim.diagnostic.setloclist, { desc = "Opens variable type hover" })
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Opens variable type hover" })
 
 -- Quit
 vim.keymap.set("n", "<leader>qa", ":wqa<CR>", { desc = "Save all and quit" })
 
 -- Navigation
-vim.keymap.set("n", "m", "3j")
-vim.keymap.set("n", ",", "3k")
+vim.keymap.set("n", "m", "4j")
+vim.keymap.set("n", ",", "4k")
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
@@ -128,3 +129,5 @@ require("nvim-surround").setup()
 vim.keymap.set("n", "<leader>gr", function()
   vim.lsp.buf.references(nil, { loclist = true })
 end, { desc = "Open [r]eferences" })
+
+require("lsp_lines").setup()

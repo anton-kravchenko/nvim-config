@@ -165,6 +165,15 @@ Ctrl w L - change layout to vertical
 Selecting
 Shift + G - select till the end of file
 
+Quotes
+di' - delete all inside single quote
+da' - delete all including quotes
+ci' - delete all inclding quotes and put to INSERT mode
+dt' - delete till single quote
+
+Selecting
+vt' - select all till '
+
 Undo/Redo
 u - undo 1 command
 U - undo all commands in the current line 
