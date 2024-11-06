@@ -16,8 +16,10 @@ Ctrl + K - show file info
 P - go to parent folder
 
 Editing
-w - jump one word forwatd
+w - jump one word forward
+W - jump to the beginning of the next word after space
 b - jump one word backward
+B - jump to the beginning of the previoys word after space
 e - jump one word forward till the end of word
 E - jump till the end of word (including punctuation) 
 x - remove charecter under cursor
@@ -26,6 +28,7 @@ A - append to the end of line
 a - insert cursor after the cursor
 O - insert new line above current
 o - insert new line below current
+J - join the line below to the current line
 yy - copy line 
 p - paste line 
 r <character> - replace character below cursor 
@@ -45,6 +48,7 @@ Copying text
 Y or yy - yank the whole line
 y - yank selected text
 y$ - yank till the end of line
+y_ - yank to start of line
 yiw - yank current word
 y^ - yank from start of the line till cursor
 yw - yank till the end of word under cursor
@@ -143,6 +147,9 @@ q h <macro> q - q starts the macro, h is the registry for macro (can be anything
 @h - replay macro from h registry
 5@h - replay macro h 5 times
 
+Running macro on multiple lines
+Select + :norm <key sequence><Enter>
+
 Editing (deleting)
 dw - delete until stat of next word
 de - delete until current word
@@ -154,6 +161,7 @@ D - remove thole line
 ce - remove till the end of work and jump to insert mode
 p - puts deleted text back
 L . - repeat last action
+daw - delete word under cursor
 
 Window manipulation
 Ctrl w o - close all other windows 
@@ -170,6 +178,10 @@ di' - delete all inside single quote
 da' - delete all including quotes
 ci' - delete all inclding quotes and put to INSERT mode
 dt' - delete till single quote
+yi' - yank between single quotes
+ds' - removes surrounding '
+cs'` - changes surrounding ' with `
+ysiw' - surround with '
 
 Selecting
 vt' - select all till '
@@ -219,7 +231,7 @@ L rn - toggle relative line number
 
 Window navigation
 :sp - split horizontally 
-:vscp - split vertically
+:vsp - split vertically
 Ctrl + hjkl - select Window
 Ctrl + w + q - close window
 
