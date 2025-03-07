@@ -6,12 +6,13 @@ local options = {
     typescript = { "prettier" },
     javascript = { "prettier" },
     markdown = { "prettier" },
-    json = { "prettier" }
+    json = { "prettier" },
+    python = { "black" },
   },
 
   format_on_save = {
     timeout_ms = 500,
-    lsp_fallback = true
+    lsp_fallback = true,
   },
 }
 

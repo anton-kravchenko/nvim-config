@@ -29,6 +29,9 @@ return {
         "html-lsp",
         "css-lsp",
         "prettier",
+        "kotlin-language-server",
+        "python",
+        "black",
       },
     },
   },
@@ -42,6 +45,10 @@ return {
         "vimdoc",
         "html",
         "css",
+        "kotlin",
+        "python",
+        "javascript",
+        "typescript",
       },
     },
   },
@@ -75,6 +82,21 @@ return {
     "tpope/vim-surround",
   },
   {
+    "terrortylor/nvim-comment",
+  },
+  {
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+  },
+  {
+    "https://github.com/nvim-telescope/telescope-live-grep-args.nvim",
+  },
+  {
+    "averms/black-nvim",
+  },
+  {
+    "MunifTanjim/nui.nvim",
+  },
+  {
+    "hrsh7th/cmp-nvim-lsp",
   },
 }
