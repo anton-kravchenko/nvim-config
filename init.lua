@@ -97,8 +97,8 @@ vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 
 -- Quickfix
-vim.keymap.set("n", "<leader>j", "<cmd>cprev<CR>")
-vim.keymap.set("n", "<leader>k", "<cmd>cnext<CR>")
+vim.keymap.set("n", "<leader>j", "<cmd>cnext<CR>")
+vim.keymap.set("n", "<leader>k", "<cmd>cprev<CR>")
 
 -- Delete without replacing clipboard contents
 vim.keymap.set("v", "<leader>p", '"_dp')
@@ -151,11 +151,11 @@ vim.keymap.set("n", "<leader>gs", function()
 end, { desc = "Open terminal and run `git status`" })
 
 vim.keymap.set("n", "<leader>tw", function()
-  require("nvchad.term").toggle { pos = "vsp", id = "test:watch", size = 0.5, cmd = "npm run test:watch" }
+  require("nvchad.term").toggle { pos = "vsp", id = "test:watch", size = 0.45, cmd = "npm run test:watch" }
 end, { desc = "Open terminal and run `npm run test:watch`" })
 
 vim.keymap.set("n", "<leader>tr", function()
-  require("nvchad.term").toggle { pos = "vsp", id = "terminal", size = 0.5 }
+  require("nvchad.term").toggle { pos = "vsp", id = "terminal", size = 0.45 }
 end, { desc = "Open Te[r]minal" })
 
 -- Exit insert mode in terminal
@@ -207,12 +207,6 @@ vim.api.nvim_create_autocmd("TermOpen", {
   end,
 })
 
-vim.keymap.set("n", "<leader>st", function()
-  vim.cmd "vsp"
-  vim.cmd.term()
-  vim.cmd "vertical resize 85"
-end)
-
 -- Folding
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
@@ -232,3 +226,20 @@ vim.keymap.set("n", "<leader>sth", function()
   local hints = require "cheat_sheet_hints"
   hints.show_hints_of_the_day()
 end, { desc = "[S]how [t]odays [h]ints" })
+
+local function definition_split()
+  vim.lsp.buf.definition {
+    on_list = function(options)
+      if #options.items > 1 then
+        vim.notify("Multiple items found, opening first one", vim.log.levels.WARN)
+      end
+
+      local item = options.items[1]
+      local cmd = "vsplit +" .. item.lnum .. " " .. item.filename .. "|" .. "normal " .. item.col .. "|"
+
+      vim.cmd(cmd)
+    end,
+  }
+end
+
+vim.keymap.set("n", "<leader>gD", definition_split, { desc = "Goto Definition (popup)" })

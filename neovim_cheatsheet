@@ -1,7 +1,7 @@
+General:
 NVIM_APPNAME=<dir_name> nvim - set config folder and run nvim
 :e $MYVIMRC - opens vim rc file
-
-L t h -> Select theme
+<leader> t h -> Select theme
 :TSInstall <language> - install language support
 :TSInstallInfo - show installed language support
 
@@ -15,7 +15,7 @@ r - rename File
 Ctrl + K - show file info
 P - go to parent folder
 
-Editing
+Editing:
 w - jump one word forward
 W - jump to the beginning of the next word after space
 b - jump one word backward
@@ -29,6 +29,7 @@ a - insert cursor after the cursor
 O - insert new line above current
 o - insert new line below current
 J - join the line below to the current line
+5J - join the next 5 lines
 yy - copy line 
 p - paste line 
 r <character> - replace character below cursor 
@@ -36,16 +37,21 @@ r <character> - replace character below cursor
 :w <file_name> - save file (or selected test) to a file
 :r !<cmd> - puts result from the command at the cursor
 :R <replace text> - replaces multiple characters
-ddp - move line down
 ddkP - move line up
+fh - just to first occurence of `h` in the line 
 
-Move
+Advanced:
+Select -> !<shell cmd> - like `!grep desc` - filter out lines that do not have `desc` in them
+In insert mode = Ctrl + = <equasion> - inserts result of equasion 
+
+Move:
 :m -3 - move 3 lines up
 :m +3 - move 3 lines down 
 :m 3 - move to the third line
 
-Copying text
-Y or yy - yank the whole line
+Copying text:
+Y - yank till the end of line
+yy - yank the whole line
 y - yank selected text
 y$ - yank till the end of line
 y_ - yank to start of line
@@ -60,12 +66,12 @@ y$ - yank till the end of line
 yiw - yank current word
 y^ - yank from start of the line till cursor
 
-Git 
-L g t - show git status 
-L c m - show git commits 
-L p h - preview git change
+Git:
+<leader> g t - show git status 
+<leader> c m - show git commits 
+<leader> p h - preview git change
 
-Set
+Set:
 :set ic - search ignoring case
 :set noic - disable search ignoring case
 :set is - show partial matches
@@ -77,7 +83,8 @@ Text navigation (vim motions):
 3w - jump 3 words forward
 2b - jump 2 words backwards
 0 - jump to the start of the line
-Ctrl o - go to previous cursor location
+Ctrl o - go to previous cursor location in the jump list
+Ctrl i - go to next cursor location in the jump list
 g; - go to previous change location
 g, - ho to next change location 
 :jumps - show the list of jumps
@@ -85,12 +92,19 @@ g, - ho to next change location
 } - jump to next paragraph
 ] ) - jump to next closing )
 [ } - jump to previous closing }
+f | - just to first | in the current line
++ - jump to beginning on a new line 
 
-Change case
+Change case:
 u - to lower case
 U - to upper case
+~ - toggle case
 
-Scrolling 
+Counter: 
+Ctrl + a - increment number under the cursor 
+Ctrl + x - decrement number under the cursor
+
+Scrolling:
 Ctrl + e - scroll down (without moving cursor)
 Ctrl + y - scroll up (without moving cursor)
 Ctrl + b - scroll 1 page up
@@ -98,7 +112,7 @@ Ctrl + f - scroll 1 page down
 Ctrl + u - scroll half a page up
 Ctrl + d - scroll half a page down
 
-Cursor
+Cursor:
 Ctrl + g - show location in a file and file status 
 G - go to the end of file
 gg - go to the start of the file
@@ -110,14 +124,18 @@ Search:
 / - search forward in the current file
 n - next occurence
 N - previous occurence
-* - select all occurences of the workd under cursor
+* - select all occurences of the work under cursor
 
-Run terminal command
+Run terminal command:
 :! <cmd> - runs external command
+:help :term - opens help for terminal
+<C-\><C-N> - leave terminal mode
+i - to enter terminal mode
+
 
 Help:
 :help - opens help 
-L s h - opens help search (kickstart onlt)
+<leader> s h - opens help search (kickstart onlt)
 
 Matching parenthesis:
 % - goes to matching parenthesis
@@ -132,23 +150,34 @@ find src/ \( -name '*.tsx' -o -name '*.ts' \) | xargs sed -i "" 's/foo/bar/' - r
 
 Change:
 ciw - remove word under the cursor and go to insert mode
+cib - removes text in a block (paranthesis ()) and enters insert mode
+ciB - removes text in a block (paranthesis {}) and enters insert mode
 cw - remove till the end of work under the cursor
 . - replay (work when using search, then making a change using c and then navigating to the next entry)
 viw - visually select word under cursor
+_"ciw - change in word without copying to buffer
 
-Registry
+Vertical column change 
+<C>+v I - select lines and go to Insert mode
+
+Registry:
 :reg - opens registry of yanked text
 "3p - paste 3rd yanked text from the registry
 :7y - yank into 7th register
 "%p - pastes the name of the file being edited
 
-Macros
+Macros:
 q h <macro> q - q starts the macro, h is the registry for macro (can be anything) and q quits macro
 @h - replay macro from h registry
 5@h - replay macro h 5 times
 
-Running macro on multiple lines
+Running macro on multiple lines:
 Select + :norm <key sequence><Enter>
+
+Indenting:
+> - indent right (. to repeat)
+< - indent left  (. to repeat)
+== - indent current line
 
 Editing (deleting)
 dw - delete until stat of next word
@@ -160,20 +189,28 @@ D - remove thole line
 2dd - remove next 2 lines
 ce - remove till the end of work and jump to insert mode
 p - puts deleted text back
-L . - repeat last action
+<leader> . - repeat last action
 daw - delete word under cursor
+diw - delete word under cursor
+diW - delete the whole thing under cursor until previous/next space
+dib - delete block (inside ())
+diB - delete block (inside {})
+daB - delete current paragraph
+dap - delete complete paragraph
+J - move selected text DOWN
+K - move selected text UP
 
-Window manipulation
+Window manipulation:
 Ctrl w o - close all other windows 
 Ctrl w v - split vertically
 Ctrl w s - split horizontally
 Ctrl w J - change layout horizontal
-Ctrl w L - change layout to vertical
+Ctrl w <leader> - change layout to vertical
 
-Selecting
+Selecting:
 Shift + G - select till the end of file
 
-Quotes
+Quotes:
 di' - delete all inside single quote
 da' - delete all including quotes
 ci' - delete all inclding quotes and put to INSERT mode
@@ -183,108 +220,136 @@ ds' - removes surrounding '
 cs'` - changes surrounding ' with `
 ysiw' - surround with '
 
-Selecting
+Selecting:
 vt' - select all till '
+vap - select paragraph (defined by new lines)
 
-Undo/Redo
+Undo/Redo:
 u - undo 1 command
 U - undo all commands in the current line 
 Ctrl + R - redo
 
-Fuzzy find file
-L f f - search over all files 
-L f a - search over all files (including hidden)
-L f b - search over open files
-L f w - search over all files
-L f z - search over current buffer
+Comments:
+gcc - toggle line comment
+gcip - toggle paragraph comment
+dic - delete commented glock
 
-LSP
-gd - go to definition
-gr - look for references
-L l f - open floating diagnostics popup
-L + D - go to typ definition
+Fuzzy find file:
+<leader> f f - search over all files 
+<leader> f a - search over all files (including hidden)
+<leader> f b - search over open files
+<leader> f w - search over all files
+<leader> f z - search over current buffer
+<leader> f s - search over './src' folder
+
+LSP:
+<leader> gd - go to definition
+<leader> gr - look for references
+<leader> l f - open floating diagnostics popup
+<leader> + D - go to typ definition
 Ctrl + F - search for LSP by name
-L c a - code action (extract code into a function)
-L r a - rename
+<leader> c a - code action (extract code into a function)
+<leader> r a - rename
 K - hower type info
-L g e - show diagnostic error in a popup
-L g [ - previous error message
-L g ] - next error message
-L t t - toggle trouble window
+<leader> g e - show diagnostic error in a popup
+<leader> g [ - previous error message
+<leader> g ] - next error message
+<leader> t t - toggle trouble window
+K - show floating type info
 
-Mason
+Mason:
 :Mason - install LSPs
 
-Telescope
+Telescope:
 :Telescope keymaps - show telescope keymaps
 :Telescope help_tags - show all vim configurations
-L cd - fuzzy find and open folder
+<leader> cd - fuzzy find and open folder
 tkm - show Telescope keymaps (:Telescope keymaps)
-C q - send search results to quick list
+
+Quickfix:
+C q - send search results to Quickfix
+:cnext - open next line from quickfix
+:cclose - close quickfix
+:copen - open quickfix
+vim.keymap.set("n", "<key>", "<cmd>cnext<CR>") - keybinding for moving to next item in quick fix
+<leader>k - go to prev line in quickfix
+<leader>j - go to next line in quickfix
 
 Cheat sheet:
-L c h - open cheet shett
+<leader> c h - open cheet shett
 
-Line numbes 
-L n - toggle line number 
-L rn - toggle relative line number 
+Line numbes:
+<leader> n - toggle line number 
+<leader> rn - toggle relative line number 
 
-Window navigation
+Window navigation:
 :sp - split horizontally 
 :vsp - split vertically
 Ctrl + hjkl - select Window
 Ctrl + w + q - close window
 
-Save file
+Save file:
 Ctrl S - saves file
 
-Directory
+Directory:
 :pwd - print current working directory
 :cd - change directory (to home)
 
-Tabs
+Tabs:
 Tab - open next tab
 Shift Tab - open previous tab
 Space x - close tab
 
-Quit
+Quit:
 q - current window 
 qa - all windowns
 
-Terminal 
-L h - open terminal in horizontal window
-L v - open terminal in vertical window
+Terminal:
+<leader> h - open terminal in horizontal window
+<leader> v - open terminal in vertical window
 
-Packages
+Packages:
 Lazy sync - sync packages
 
-Dir/file navigation
+Dir/file navigation:
 :e <dir/file name>
 
-Lua
+Lua:
 :lua print 'hello' - run Lua :lua vim.opt.number = false - hides numbers
 https://neovim.io/doc/user/lua-guide.html
 https://learnxinyminutes.com/docs/lua/
+:lua = vim.uv.cwd() - prints current working directory
 
-K - show floating type info
-
-Formatting 
+Formatting:
 = - fixes indents selected text 
 gg=G - fixes indents in the whole file
+=ap - formats paragraph
 
-# Custom config
+Custom config:
 :source % - run init lua file
 
 
-# Key names
+Key names:
 <leader> - leader key
 <CR> - caret return (enter)
 <C-n> - control n
 
-Show recent open files
+Show recent open files:
 :browse oldfiles
 
-Mappings
+Mappings:
 :nmap - for normal mode mappings
 :vmap - for visual mode mappings
 :imap - for insert mode mappings
+
+Folding:
+za - toggle fold at the cursor 
+zM - close all folds
+zR - open all folds
+
+Encryption:
+g? - ROT13 encodes selected text
+
+Vim input picker: 
+`vim.fn.input`
+

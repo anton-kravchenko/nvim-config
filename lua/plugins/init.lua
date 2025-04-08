@@ -99,4 +99,8 @@ return {
   {
     "hrsh7th/cmp-nvim-lsp",
   },
+  {
+    "ThePrimeagen/vim-be-good",
+    cmd = "VimBeGood",
+  },
 }
