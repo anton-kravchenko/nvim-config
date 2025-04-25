@@ -82,7 +82,7 @@ vim.keymap.set("n", "<leader>cd", telescope.extensions.zoxide.list, { desc = "Op
 vim.keymap.set("n", "tkm", ":Telescope keymaps<CR>", { desc = "Opens Telescope keybindings" })
 
 -- Shows list of all errors from LSP
-local trouble = require "trouble"
+require "trouble"
 vim.keymap.set("n", "<leader>tt", ":Trouble diagnostics toggle<CR>")
 -- LSP
 vim.keymap.set("n", "<leader>ge", vim.diagnostic.open_float, { desc = "Show diagnostic [e]rror message" })
@@ -104,9 +104,11 @@ vim.keymap.set("n", "<leader>k", "<cmd>cprev<CR>")
 vim.keymap.set("v", "<leader>p", '"_dp')
 
 -- Quit
-vim.keymap.set("n", "<leader>qa", ":wqa<CR>", { desc = "Save all and quit" })
+vim.keymap.set("n", "<leader>qa", ":qa!<CR>", { desc = "Force quit" })
 
 -- Navigation
+vim.keymap.set("n", "j", "gj")
+vim.keymap.set("n", "k", "gk")
 vim.keymap.set("n", "m", "4j")
 vim.keymap.set("n", ",", "4k")
 
@@ -134,32 +136,6 @@ require("gitsigns").setup {
     delay = 1000,
   },
 }
-
-vim.keymap.set("n", "<leader>gs", function()
-  require("nvchad.term").toggle {
-    pos = "float",
-    id = "git-status",
-    cmd = "git status",
-    float_opts = {
-      row = 0.1,
-      col = 0.15,
-      width = 0.7,
-      height = 0.7,
-      border = "single",
-    },
-  }
-end, { desc = "Open terminal and run `git status`" })
-
-vim.keymap.set("n", "<leader>tw", function()
-  require("nvchad.term").toggle { pos = "vsp", id = "test:watch", size = 0.45, cmd = "npm run test:watch" }
-end, { desc = "Open terminal and run `npm run test:watch`" })
-
-vim.keymap.set("n", "<leader>tr", function()
-  require("nvchad.term").toggle { pos = "vsp", id = "terminal", size = 0.45 }
-end, { desc = "Open Te[r]minal" })
-
--- Exit insert mode in terminal
-vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 
 -- Status line
 local background = "#171b20"
@@ -243,3 +219,85 @@ local function definition_split()
 end
 
 vim.keymap.set("n", "<leader>gD", definition_split, { desc = "Goto Definition (popup)" })
+
+-- Integrated terminals
+local testWatchTerminalConfig =
+  { pos = "vsp", id = "test:watch", size = 0.45, cmd = "npm run test:watch", name = "Test watch terminal" }
+
+local terminalConfig = { pos = "vsp", id = "terminal", size = 0.45, name = "Terminal" }
+
+local gitStatusTerminalConfig = {
+  pos = "float",
+  id = "git-status",
+  cmd = "git status",
+  float_opts = { row = 0.1, col = 0.15, width = 0.7, height = 0.7, border = "single" },
+  name = "Git status terminal",
+}
+
+local recent_terminal = nil
+local TERMINALS_ARE_HIDDEN = false
+local function toggle_terminal(config)
+  require("nvchad.term").toggle(config)
+  recent_terminal = config
+end
+
+vim.keymap.set("n", "<leader>gs", function()
+  toggle_terminal(gitStatusTerminalConfig)
+end, { desc = "Open terminal and run `git status`" })
+
+vim.keymap.set("n", "<leader>tw", function()
+  toggle_terminal(testWatchTerminalConfig)
+end, { desc = "Open terminal and run `npm run test:watch`" })
+
+vim.keymap.set("n", "<leader>tr", function()
+  toggle_terminal(terminalConfig)
+end, { desc = "Open Te[r]minal" })
+
+local function toggle_integrated_terminals()
+  if TERMINALS_ARE_HIDDEN == true and recent_terminal then
+    toggle_terminal(recent_terminal)
+    TERMINALS_ARE_HIDDEN = false
+  else
+    TERMINALS_ARE_HIDDEN = true
+    local terminalConfigs = {
+      testWatchTerminalConfig,
+      terminalConfig,
+      gitStatusTerminalConfig,
+    }
+
+    local function id_to_term(id)
+      local terms = vim.g.nvchad_terms
+      if terms then
+        for _, opts in pairs(vim.g.nvchad_terms) do
+          if opts.id == id then
+            return opts
+          end
+        end
+      else
+        print "No hidden terminals"
+      end
+    end
+
+    for _, t in pairs(terminalConfigs) do
+      local x = id_to_term(t.id)
+
+      if (x ~= nil and vim.api.nvim_buf_is_valid(x.buf)) and vim.fn.bufwinid(x.buf) ~= -1 then
+        vim.api.nvim_win_close(x.win, true)
+      end
+    end
+  end
+end
+
+-- Exit insert mode in terminal
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
+
+-- Quit terminal mode and hide all integrated terminals
+vim.keymap.set("t", "<C-Space>", function()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
+  toggle_integrated_terminals()
+end)
+
+-- Toggle recently opened integrated terminal
+vim.keymap.set("n", "<C-Space>", function()
+  toggle_integrated_terminals()
+end)

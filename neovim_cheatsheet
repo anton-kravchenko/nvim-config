@@ -283,6 +283,8 @@ Line numbes:
 <leader> rn - toggle relative line number 
 
 Window navigation:
+Ctrl + w + > - increase width
+Ctrl + w + < - decrease width
 :sp - split horizontally 
 :vsp - split vertically
 Ctrl + hjkl - select Window
