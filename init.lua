@@ -109,8 +109,29 @@ vim.keymap.set("n", "<leader>qa", ":qa!<CR>", { desc = "Force quit" })
 -- Navigation
 vim.keymap.set("n", "j", "gj")
 vim.keymap.set("n", "k", "gk")
-vim.keymap.set("n", "m", "4j")
-vim.keymap.set("n", ",", "4k")
+
+local function jump_and_scroll(jump)
+  local cursor_line = vim.fn.line "."
+  local lines_in_current_buffer = vim.api.nvim_buf_line_count(0)
+  local new_cursor_line = cursor_line + jump
+
+  if new_cursor_line <= lines_in_current_buffer and new_cursor_line > 0 then
+    local view = vim.fn.winsaveview()
+    view.topline = view.topline + jump
+    vim.fn.winrestview(view)
+
+    local cursor_column = vim.fn.col "."
+    vim.api.nvim_win_set_cursor(0, { new_cursor_line, cursor_column })
+  end
+end
+
+vim.keymap.set("n", "m", function()
+  jump_and_scroll(5)
+end)
+
+vim.keymap.set("n", ",", function()
+  jump_and_scroll(-5)
+end)
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
@@ -290,6 +311,7 @@ end
 
 -- Exit insert mode in terminal
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
+vim.keymap.set("t", "<leader><leader>", "<C-\\><C-n>")
 
 -- Quit terminal mode and hide all integrated terminals
 vim.keymap.set("t", "<C-Space>", function()
@@ -301,3 +323,10 @@ end)
 vim.keymap.set("n", "<C-Space>", function()
   toggle_integrated_terminals()
 end)
+
+vim.keymap.set("n", "ii", function()
+  vim.cmd "normal! zz"
+end)
+
+-- Quit visual mode
+vim.keymap.set("v", "v", "<Esc>", { noremap = true, silent = true })

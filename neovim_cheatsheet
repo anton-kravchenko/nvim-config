@@ -80,6 +80,7 @@ Set:
 :set inv<cmd> - invert cmd
 
 Text navigation (vim motions):
+ii - move cursor to the center of the screen (vertically)
 3w - jump 3 words forward
 2b - jump 2 words backwards
 0 - jump to the start of the line
