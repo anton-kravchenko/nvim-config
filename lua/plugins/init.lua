@@ -103,4 +103,10 @@ return {
     "ThePrimeagen/vim-be-good",
     cmd = "VimBeGood",
   },
+  {
+    "vinnymeller/swagger-preview.nvim",
+    cmd = { "SwaggerPreview", "SwaggerPreviewStop", "SwaggerPreviewToggle" },
+    build = "npm i",
+    config = true,
+  },
 }

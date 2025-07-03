@@ -24,7 +24,8 @@ e - jump one word forward till the end of word
 E - jump till the end of word (including punctuation) 
 x - remove charecter under cursor
 X - remove character before cursor
-A - append to the end of line
+A - go to the end of the current line and enter insert mode
+I - go to the beginning of the current line and enter insert mode
 a - insert cursor after the cursor
 O - insert new line above current
 o - insert new line below current
@@ -200,6 +201,7 @@ daB - delete current paragraph
 dap - delete complete paragraph
 J - move selected text DOWN
 K - move selected text UP
+S - delete current line and enter insert mode
 
 Window manipulation:
 Ctrl w o - close all other windows 

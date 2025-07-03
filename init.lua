@@ -25,7 +25,7 @@ require("lazy").setup({
   {
     "NvChad/NvChad",
     lazy = false,
-    branch = "v2.5",
+    brnch = "v2.5",
     import = "nvchad.plugins",
     config = function()
       require "options"
@@ -85,9 +85,25 @@ vim.keymap.set("n", "tkm", ":Telescope keymaps<CR>", { desc = "Opens Telescope k
 require "trouble"
 vim.keymap.set("n", "<leader>tt", ":Trouble diagnostics toggle<CR>")
 -- LSP
+
+local function make_diagnostic_jump(direction)
+  return function()
+    if direction == "next" then
+      vim.diagnostic.jump { count = 1, float = true }
+    elseif direction == "previous" then
+      vim.diagnostic.jump { count = -1, float = true }
+    end
+  end
+end
+
 vim.keymap.set("n", "<leader>ge", vim.diagnostic.open_float, { desc = "Show diagnostic [e]rror message" })
-vim.keymap.set("n", "<leader>g[", vim.diagnostic.goto_prev, { desc = "Go to previus [d]iagnostic message" })
-vim.keymap.set("n", "<leader>g]", vim.diagnostic.goto_next, { desc = "Go to next [d]iagnostic message" })
+
+vim.keymap.set("n", "<leader>g[", make_diagnostic_jump "previous", { desc = "Go to previus [d]iagnostic message" })
+vim.keymap.set("n", "<leader>gj", make_diagnostic_jump "previous", { desc = "Go to previus [d]iagnostic message" })
+
+vim.keymap.set("n", "<leader>g]", make_diagnostic_jump "next", { desc = "Go to next [d]iagnostic message" })
+vim.keymap.set("n", "<leader>gk", make_diagnostic_jump "next", { desc = "Go to next [d]iagnostic message" })
+
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open [d]iagnostic quick fix" })
 vim.keymap.set("n", "KL", vim.diagnostic.setloclist, { desc = "Opens variable type hover" })
 vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Opens variable type hover" })
@@ -312,6 +328,7 @@ end
 -- Exit insert mode in terminal
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 vim.keymap.set("t", "<leader><leader>", "<C-\\><C-n>")
+vim.keymap.set("t", "jk", "<C-\\><C-n>")
 
 -- Quit terminal mode and hide all integrated terminals
 vim.keymap.set("t", "<C-Space>", function()
@@ -330,3 +347,12 @@ end)
 
 -- Quit visual mode
 vim.keymap.set("v", "v", "<Esc>", { noremap = true, silent = true })
+
+-- Swager preview
+vim.keymap.set("n", "<leader>sp", ":SwaggerPreviewToggle<CR>", { desc = "Toggle swagger preview" })
+require("swagger-preview").setup { port = 8000, host = "localhost" }
+
+-- Disable replacing clipboard with the context of replacing text when pasting
+vim.keymap.set("x", "p", function()
+  return 'pgv"' .. vim.v.register .. "y"
+end, { remap = false, expr = true })
