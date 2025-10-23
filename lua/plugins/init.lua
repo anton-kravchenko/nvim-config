@@ -35,7 +35,9 @@ return {
       },
     },
   },
-  --
+  {
+    "Elive/nvim-nvchad-base46",
+  },
   {
     "nvim-treesitter/nvim-treesitter",
     opts = {
@@ -108,5 +110,47 @@ return {
     cmd = { "SwaggerPreview", "SwaggerPreviewStop", "SwaggerPreviewToggle" },
     build = "npm i",
     config = true,
+  },
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+    },
+  },
+  {
+    "folke/snacks.nvim",
+    opts = {
+      lazygit = {
+        theme = {
+          [241] = { fg = "Special" },
+          activeBorderColor = { fg = "MatchParen", bold = true },
+          cherryPickedCommitBgColor = { fg = "Identifier" },
+          cherryPickedCommitFgColor = { fg = "Function" },
+          defaultFgColor = { fg = "Normal" },
+          inactiveBorderColor = { fg = "FloatBorder" },
+          optionsTextColor = { fg = "Function" },
+          searchingActiveBorderColor = { fg = "MatchParen", bold = true },
+          selectedLineBgColor = { bg = "Visual" }, -- set to `default` to have no background colour
+          unstagedChangesColor = { fg = "DiagnosticError" },
+        },
+        -- your lazygit configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      },
+    },
   },
 }

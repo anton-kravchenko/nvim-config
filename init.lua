@@ -1,7 +1,10 @@
+local session_tracker = require "session_tracker"
+session_tracker.setup().start()
+
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/nvchad/base46/"
 vim.g.mapleader = " "
 
--- bootstrap lazy and all plugins
+-- bootthtrap lazy and all plugins
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
 if not vim.loop.fs_stat(lazypath) then
@@ -46,6 +49,27 @@ local function close_buffers(close_all)
   end
 end
 
+local function load_nvim_tree()
+  require("nvim-tree").setup {
+    filters = {
+      dotfiles = false,
+    },
+    git = {
+      enable = true,
+      ignore = false,
+    },
+    disable_netrw = false,
+    update_cwd = true,
+    update_focused_file = {
+      enable = true,
+    },
+    view = {
+      width = 35,
+    },
+  }
+end
+load_nvim_tree()
+
 local telescope = require "telescope"
 telescope.setup {
   extensions = {
@@ -56,24 +80,12 @@ telescope.setup {
           after_action = function(selection)
             print("Directory changed to " .. selection.path)
             close_buffers(true)
-            local nvim_tree = require("nvim-tree.api").tree
-            nvim_tree.close()
-            nvim_tree.open()
+
+            load_nvim_tree()
           end,
         },
       },
     },
-  },
-}
-
-require("nvim-tree").setup {
-  disable_netrw = false,
-  update_cwd = true,
-  update_focused_file = {
-    enable = true,
-  },
-  view = {
-    width = 35,
   },
 }
 
@@ -107,6 +119,7 @@ vim.keymap.set("n", "<leader>gk", make_diagnostic_jump "next", { desc = "Go to n
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open [d]iagnostic quick fix" })
 vim.keymap.set("n", "KL", vim.diagnostic.setloclist, { desc = "Opens variable type hover" })
 vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Opens variable type hover" })
+vim.api.nvim_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { noremap = true, silent = true })
 
 -- Moving selected text
 vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")
@@ -115,6 +128,9 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 -- Quickfix
 vim.keymap.set("n", "<leader>j", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<leader>k", "<cmd>cprev<CR>")
+
+-- PWD
+vim.keymap.set("n", "pwd", ":pwd<CR>")
 
 -- Delete without replacing clipboard contents
 vim.keymap.set("v", "<leader>p", '"_dp')
@@ -222,7 +238,8 @@ vim.api.nvim_create_autocmd("TermOpen", {
 
 -- Folding
 vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+-- TODO: uncomment
+-- vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 100
 vim.opt.foldnestmax = 4
@@ -326,9 +343,10 @@ local function toggle_integrated_terminals()
 end
 
 -- Exit insert mode in terminal
-vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
+-- vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 vim.keymap.set("t", "<leader><leader>", "<C-\\><C-n>")
-vim.keymap.set("t", "jk", "<C-\\><C-n>")
+-- vim.keymap.set("t", "jk", "<C-\\><C-n>")
+vim.keymap.set("t", "fd", "<C-\\><C-n>")
 
 -- Quit terminal mode and hide all integrated terminals
 vim.keymap.set("t", "<C-Space>", function()
@@ -356,3 +374,8 @@ require("swagger-preview").setup { port = 8000, host = "localhost" }
 vim.keymap.set("x", "p", function()
   return 'pgv"' .. vim.v.register .. "y"
 end, { remap = false, expr = true })
+
+-- Session tracker
+vim.keymap.set("n", "<leader>sts", ":ST sessions<CR>", { desc = "Shows the list of sessions" })
+vim.keymap.set("n", "<leader>stc", ":ST current<CR>", { desc = "Show current session" })
+vim.keymap.set("n", "<leader>stt", ":ST show<CR>", { desc = "Show today's timeline" })

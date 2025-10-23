@@ -40,6 +40,11 @@ r <character> - replace character below cursor
 :R <replace text> - replaces multiple characters
 ddkP - move line up
 fh - just to first occurence of `h` in the line 
+> - shift right
+< - shift left (combine with Ctrl + v for multiline selection)
+:right - align selected text right
+:left - align selected text left
+:center -align selected text center
 
 Advanced:
 Select -> !<shell cmd> - like `!grep desc` - filter out lines that do not have `desc` in them
@@ -172,6 +177,7 @@ Macros:
 q h <macro> q - q starts the macro, h is the registry for macro (can be anything) and q quits macro
 @h - replay macro from h registry
 5@h - replay macro h 5 times
+5,10 norm @h - replay macros h from lines 5 to 10
 
 Running macro on multiple lines:
 Select + :norm <key sequence><Enter>
@@ -199,9 +205,11 @@ dib - delete block (inside ())
 diB - delete block (inside {})
 daB - delete current paragraph
 dap - delete complete paragraph
+3dap - delete complete paragraph 3 times
 J - move selected text DOWN
 K - move selected text UP
 S - delete current line and enter insert mode
+gv - select last selection
 
 Window manipulation:
 Ctrl w o - close all other windows 

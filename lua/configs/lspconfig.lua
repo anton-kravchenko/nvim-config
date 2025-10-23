@@ -20,9 +20,21 @@ for _, lsp in ipairs(servers) do
   }
 end
 
--- typescript
+local function on_attach_without_focus_grab(client, bufnr)
+  on_attach(client, bufnr)
+
+  if client.name == "tsserver" or client.name == "ts_ls" then
+    local orig = vim.lsp.util.open_floating_preview
+    vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
+      opts = opts or {}
+      opts.focusable = false
+      return orig(contents, syntax, opts, ...)
+    end
+  end
+end
+
 lspconfig.ts_ls.setup {
-  on_attach = on_attach,
+  on_attach = on_attach_without_focus_grab,
   on_init = on_init,
   capabilities = capabilities,
 }

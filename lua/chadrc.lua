@@ -7,15 +7,11 @@ local M = {}
 M.ui = {
   theme = "decay",
   statusline = {
-    theme = "vscode"
+    theme = "vscode",
   },
   telescope = {
-    style = 'bordered'
-  }
-  -- hl_override = {
-  -- 	Comment = { italic = true },
-  -- 	["@comment"] = { italic = true },
-  -- },
+    style = "bordered",
+  },
 }
 
 return M
