@@ -107,6 +107,22 @@ local function make_diagnostic_jump(direction)
   end
 end
 
+local severity = vim.diagnostic.severity
+vim.diagnostic.config {
+  signs = {
+    text = {
+      -- Icons https://nerdfonts.ytyng.com/
+      -- [severity.ERROR] = "",
+      -- [severity.WARN] = "",
+      -- [severity.ERROR] = "",
+      [severity.ERROR] = "",
+      [severity.WARN] = "",
+      [severity.HINT] = "",
+      [severity.INFO] = "",
+    },
+  },
+}
+
 vim.keymap.set("n", "<leader>ge", vim.diagnostic.open_float, { desc = "Show diagnostic [e]rror message" })
 
 vim.keymap.set("n", "<leader>g[", make_diagnostic_jump "previous", { desc = "Go to previus [d]iagnostic message" })
