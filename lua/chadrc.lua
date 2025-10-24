@@ -4,8 +4,8 @@
 ---@type ChadrcConfig
 local M = {}
 
-M.ui = {
-  theme = "decay",
+M.base46 = {
+  theme = "poimandres",
   statusline = {
     theme = "vscode",
   },

@@ -96,7 +96,6 @@ vim.keymap.set("n", "tkm", ":Telescope keymaps<CR>", { desc = "Opens Telescope k
 -- Shows list of all errors from LSP
 require "trouble"
 vim.keymap.set("n", "<leader>tt", ":Trouble diagnostics toggle<CR>")
--- LSP
 
 local function make_diagnostic_jump(direction)
   return function()
@@ -119,6 +118,7 @@ vim.keymap.set("n", "<leader>gk", make_diagnostic_jump "next", { desc = "Go to n
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open [d]iagnostic quick fix" })
 vim.keymap.set("n", "KL", vim.diagnostic.setloclist, { desc = "Opens variable type hover" })
 vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Opens variable type hover" })
+vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "Go to [d]efintion" })
 vim.api.nvim_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { noremap = true, silent = true })
 
 -- Moving selected text
@@ -238,8 +238,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
 
 -- Folding
 vim.opt.foldmethod = "expr"
--- TODO: uncomment
--- vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 100
 vim.opt.foldnestmax = 4

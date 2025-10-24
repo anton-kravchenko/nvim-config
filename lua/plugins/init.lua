@@ -10,14 +10,26 @@ return {
     "williamboman/nvim-lsp-installer",
   },
   -- These are some examples, uncomment them if you want to see them work!
-  {
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   config = function()
+  --     require("nvchad.configs.lspconfig").defaults()
+  --     require "configs.lspconfig"
+  --   end,
+  -- },
+  --
+  { -- language support
     "neovim/nvim-lspconfig",
     config = function()
-      require("nvchad.configs.lspconfig").defaults()
-      require "configs.lspconfig"
+      vim.lsp.config("*", {})
+      vim.lsp.enable {
+        "lua_ls",
+        "pylsp",
+        "ts_ls",
+        "json_lsp",
+      }
     end,
   },
-  --
   {
     "williamboman/mason.nvim",
     opts = {
@@ -150,6 +162,40 @@ return {
         -- your lazygit configuration comes here
         -- or leave it empty to use the default settings
         -- refer to the configuration section below
+      },
+    },
+  },
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    opts = {
+      library = {
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
+    },
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    opts = function(_, opts)
+      opts.sources = opts.sources or {}
+      table.insert(opts.sources, {
+        name = "lazydev",
+        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+      })
+    end,
+  },
+  {
+    "saghen/blink.cmp",
+    opts = {
+      sources = {
+        default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+        providers = {
+          lazydev = {
+            name = "LazyDev",
+            module = "lazydev.integrations.blink",
+            score_offset = 100,
+          },
+        },
       },
     },
   },
