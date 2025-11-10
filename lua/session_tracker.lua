@@ -172,7 +172,9 @@ function M.run(opts)
   elseif arg == "show" then
     M.show_timeline()
   elseif arg == "sessions" then
-    M.sessions()
+    M.sessions_statistics(10, true)
+    M.sessions_statistics(30, false)
+    M.sessions_statistics("all", false)
   else
     logger.error("Session tracker: unknown command '" .. arg .. "'")
   end
@@ -413,10 +415,14 @@ function M.show_timeline(date)
   return true
 end
 
-M.sessions = function()
+M.sessions_statistics = function(number_of_sessions, show_timeline)
   local sessions = get_sessions_list()
-  local max = 10
-  local id = math.max(#sessions - max, 1)
+
+  if type(number_of_sessions) == "string" then
+    number_of_sessions = #sessions
+  end
+
+  local id = math.max(#sessions - number_of_sessions, 1)
   local all_sessions_duration_s = 0
 
   while id <= #sessions do
@@ -427,13 +433,20 @@ M.sessions = function()
     if sessions then
       all_sessions_duration_s = all_sessions_duration_s + sessions.overall_duration_s
 
-      M.show_timeline(date)
-      print "\n"
+      if show_timeline == true then
+        M.show_timeline(date)
+        print "\n"
+      end
     end
   end
 
-  local average_daily_session_s = all_sessions_duration_s / max
-  print("Average daily active time over the last " .. max .. " days is " .. pretty_time_s(average_daily_session_s))
+  local average_daily_session_s = all_sessions_duration_s / number_of_sessions
+  print(
+    "Average daily active time over the last "
+      .. number_of_sessions
+      .. " days is "
+      .. pretty_time_s(average_daily_session_s)
+  )
 end
 
 return M

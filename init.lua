@@ -135,6 +135,7 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open [d]ia
 vim.keymap.set("n", "KL", vim.diagnostic.setloclist, { desc = "Opens variable type hover" })
 vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Opens variable type hover" })
 vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "Go to [d]efintion" })
+vim.keymap.set("n", "<leader>ra", vim.lsp.buf.rename, { desc = "[R]ename symbol" })
 vim.api.nvim_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { noremap = true, silent = true })
 
 -- Moving selected text
