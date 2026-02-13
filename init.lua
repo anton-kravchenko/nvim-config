@@ -82,6 +82,7 @@ telescope.setup {
             close_buffers(true)
 
             load_nvim_tree()
+            update_terminal_directory(vim.fn.getcwd())
           end,
         },
       },
@@ -315,6 +316,18 @@ local function toggle_integrated_terminals()
   else
     print "No active terminals"
   end
+end
+
+function close_all_terminals()
+  horizontal_term:close()
+  vertical_term:close()
+  float_term:close()
+end
+
+function update_terminal_directory(dir)
+  horizontal_term.dir = dir
+  vertical_term.dir = dir
+  float_term.dir = dir
 end
 
 vim.keymap.set("n", "<leader>gs", function()
