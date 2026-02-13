@@ -35,6 +35,8 @@ return {
         "kotlin-language-server",
         "python",
         "black",
+        "yamlfmt",
+        "yaml-language-server",
       },
     },
   },
@@ -136,25 +138,6 @@ return {
   },
   {
     "folke/snacks.nvim",
-    opts = {
-      lazygit = {
-        theme = {
-          [241] = { fg = "Special" },
-          activeBorderColor = { fg = "MatchParen", bold = true },
-          cherryPickedCommitBgColor = { fg = "Identifier" },
-          cherryPickedCommitFgColor = { fg = "Function" },
-          defaultFgColor = { fg = "Normal" },
-          inactiveBorderColor = { fg = "FloatBorder" },
-          optionsTextColor = { fg = "Function" },
-          searchingActiveBorderColor = { fg = "MatchParen", bold = true },
-          selectedLineBgColor = { bg = "Visual" }, -- set to `default` to have no background colour
-          unstagedChangesColor = { fg = "DiagnosticError" },
-        },
-        -- your lazygit configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-      },
-    },
   },
   {
     "folke/lazydev.nvim",
@@ -189,5 +172,27 @@ return {
         },
       },
     },
+  },
+  {
+    "akinsho/toggleterm.nvim",
+    version = "*",
+    config = function()
+      require("toggleterm").setup {
+        -- Size can be a number (cells) or a function (percentage)
+        size = function(term)
+          if term.direction == "horizontal" then
+            return 20
+          elseif term.direction == "vertical" then
+            return vim.o.columns * 0.5
+          end
+        end,
+        hide_numbers = true, -- Hide line numbers in terminal
+        shade_terminals = false, -- IMPORTANT: Set to false to avoid the bluish tint
+        insert_mappings = true, -- Whether open mapping applies in insert mode
+        terminal_mappings = true, -- Whether open mapping applies in terminal mode
+        start_in_insert = true,
+        close_on_exit = true,
+      }
+    end,
   },
 }

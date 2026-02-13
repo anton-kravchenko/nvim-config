@@ -76,7 +76,7 @@ local function stop_active_session()
   local last_session_duration_s = last_interaction_s - active_session_start_s
   is_session_active = false
 
-  if last_session_duration_s > 0 then
+  if last_session_duration_s > 0 and last_session_duration_s < 60 * 60 * 2 then
     local latest_active_session = {
       from = pretty_time(active_session_start_s),
       to = pretty_time(last_interaction_s),
@@ -380,7 +380,18 @@ function M.show_timeline(date)
       local since_midnight_h = math.floor(since_midnight_s / 60 / 60) + 1
       local step_within_hour = math.floor((from_s % (60 * 60)) / step_s)
 
-      timeline_by_hour[since_midnight_h][step_within_hour + 1] = visual.timeline_active_mark
+      hour_timeline = timeline_by_hour[since_midnight_h]
+
+      if hour_timeline then
+        hour_timeline[step_within_hour + 1] = visual.timeline_active_mark
+      else
+        -- session has invalid timestamp
+        print(vim.json.encode {
+          message = "Invalid timestamp in session",
+          session = session,
+          date = date,
+        })
+      end
       from_s = from_s + step_s
     end
   end

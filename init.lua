@@ -4,7 +4,7 @@ session_tracker.setup().start()
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/nvchad/base46/"
 vim.g.mapleader = " "
 
--- bootthtrap lazy and all plugins
+-- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
 if not vim.loop.fs_stat(lazypath) then
@@ -233,7 +233,6 @@ vim.schedule(function()
 end)
 
 require("nvim-cursorline").setup()
-
 require("nvim-surround").setup()
 require("nvim_comment").setup()
 
@@ -291,78 +290,58 @@ end
 vim.keymap.set("n", "<leader>gD", definition_split, { desc = "Goto Definition (popup)" })
 
 -- Integrated terminals
-local testWatchTerminalConfig =
-  { pos = "vsp", id = "test:watch", size = 0.45, cmd = "npm run test:watch", name = "Test watch terminal" }
+local Terminal = require("toggleterm.terminal").Terminal
 
-local terminalConfig = { pos = "vsp", id = "terminal", size = 0.45, name = "Terminal" }
-
-local gitStatusTerminalConfig = {
-  pos = "float",
-  id = "git-status",
-  cmd = "git status",
-  float_opts = { row = 0.1, col = 0.15, width = 0.7, height = 0.7, border = "single" },
-  name = "Git status terminal",
-}
+local horizontal_term = Terminal:new { direction = "horizontal" }
+local vertical_term = Terminal:new { direction = "vertical" }
+local float_term = Terminal:new { direction = "float", float_opts = { border = "curved", winblend = 3 } }
 
 local recent_terminal = nil
-local TERMINALS_ARE_HIDDEN = false
-local function toggle_terminal(config)
-  require("nvchad.term").toggle(config)
-  recent_terminal = config
-end
-
-vim.keymap.set("n", "<leader>gs", function()
-  toggle_terminal(gitStatusTerminalConfig)
-end, { desc = "Open terminal and run `git status`" })
-
-vim.keymap.set("n", "<leader>tw", function()
-  toggle_terminal(testWatchTerminalConfig)
-end, { desc = "Open terminal and run `npm run test:watch`" })
-
-vim.keymap.set("n", "<leader>tr", function()
-  toggle_terminal(terminalConfig)
-end, { desc = "Open Te[r]minal" })
-
-local function toggle_integrated_terminals()
-  if TERMINALS_ARE_HIDDEN == true and recent_terminal then
-    toggle_terminal(recent_terminal)
-    TERMINALS_ARE_HIDDEN = false
-  else
-    TERMINALS_ARE_HIDDEN = true
-    local terminalConfigs = {
-      testWatchTerminalConfig,
-      terminalConfig,
-      gitStatusTerminalConfig,
-    }
-
-    local function id_to_term(id)
-      local terms = vim.g.nvchad_terms
-      if terms then
-        for _, opts in pairs(vim.g.nvchad_terms) do
-          if opts.id == id then
-            return opts
-          end
-        end
-      else
-        print "No hidden terminals"
-      end
-    end
-
-    for _, t in pairs(terminalConfigs) do
-      local x = id_to_term(t.id)
-
-      if (x ~= nil and vim.api.nvim_buf_is_valid(x.buf)) and vim.fn.bufwinid(x.buf) ~= -1 then
-        vim.api.nvim_win_close(x.win, true)
-      end
-    end
+local function hide_active_teminal()
+  if recent_terminal then
+    recent_terminal:close()
   end
 end
 
+local function toggle_terminal(terminal)
+  hide_active_teminal()
+  recent_terminal = terminal
+  terminal:toggle()
+end
+
+local function toggle_integrated_terminals()
+  if recent_terminal then
+    recent_terminal:toggle()
+  else
+    print "No active terminals"
+  end
+end
+
+vim.keymap.set("n", "<leader>gs", function()
+  toggle_terminal(float_term)
+end, { desc = "Open terminal and run `git status`" })
+
+vim.keymap.set("n", "<leader>tw", function()
+  toggle_terminal(horizontal_term)
+end, { desc = "Open terminal and run `npm run test:watch`" })
+
+vim.keymap.set("n", "<leader>tr", function()
+  toggle_terminal(vertical_term)
+end, { desc = "Open Te[r]minal" })
+
 -- Exit insert mode in terminal
--- vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
-vim.keymap.set("t", "<leader><leader>", "<C-\\><C-n>")
--- vim.keymap.set("t", "jk", "<C-\\><C-n>")
 vim.keymap.set("t", "fd", "<C-\\><C-n>")
+
+local function clear()
+  vim.opt_local.scrollback = 1
+  vim.api.nvim_command "startinsert"
+  vim.api.nvim_feedkeys("clear", "t", false)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, true, true), "t", true)
+  vim.opt_local.scrollback = 10000
+end
+
+vim.keymap.set("n", "clear", clear, {})
+vim.keymap.set({ "n", "t" }, "<leader><leader>", clear, {})
 
 -- Quit terminal mode and hide all integrated terminals
 vim.keymap.set("t", "<C-Space>", function()
@@ -394,4 +373,6 @@ end, { remap = false, expr = true })
 -- Session tracker
 vim.keymap.set("n", "<leader>sts", ":ST sessions<CR>", { desc = "Shows the list of sessions" })
 vim.keymap.set("n", "<leader>stc", ":ST current<CR>", { desc = "Show current session" })
+vim.keymap.set("n", "<leader>stt", ":ST show<CR>", { desc = "Show today's timeline" })
+
 vim.keymap.set("n", "<leader>stt", ":ST show<CR>", { desc = "Show today's timeline" })
