@@ -237,12 +237,67 @@ require("nvim-cursorline").setup()
 require("nvim-surround").setup()
 require("nvim_comment").setup()
 
+require("lsp_lines").setup()
+
+local function filter_references()
+  local clients = vim.lsp.get_clients { bufnr = 0 }
+  local client = clients[1]
+
+  if not client then
+    vim.notify("No active LSP client found", vim.log.levels.ERROR)
+    return
+  end
+
+  local encoding = client.offset_encoding or "utf-16"
+  local params = vim.lsp.util.make_position_params(0, encoding)
+
+  params = vim.tbl_extend("force", params, { context = { includeDeclaration = true } })
+
+  vim.lsp.buf_request(0, "textDocument/references", params, function(err, result)
+    if err then
+      vim.notify("LSP Error: " .. err.message, vim.log.levels.ERROR)
+      return
+    end
+
+    if not result or vim.tbl_isempty(result) then
+      vim.notify("No references found", vim.log.levels.INFO)
+      return
+    end
+
+    local items = vim.lsp.util.locations_to_items(result, "utf-8")
+    local filtered_items = vim.tbl_filter(function(item)
+      local exclude_patterns = { "node_modules", "__tests__", "tests" }
+
+      for _, pattern in ipairs(exclude_patterns) do
+        if item.filename:find(pattern) then
+          return false
+        end
+      end
+
+      return true
+    end, items)
+
+    if vim.tbl_isempty(filtered_items) then
+      vim.notify("All references were filtered out", vim.log.levels.WARN)
+      return
+    end
+
+    vim.fn.setqflist({}, " ", {
+      title = "References",
+      items = filtered_items,
+    })
+
+    vim.cmd "copen"
+  end)
+end
+
+-- Opens filtered references (avoids __tests__ references)
+vim.keymap.set("n", "gr", filter_references, { desc = "Open filtered [r]eferences" })
+
 -- Opens LSP references in the same view as open file
-vim.keymap.set("n", "<leader>gr", function()
+vim.keymap.set("n", "<leader>gR", function()
   vim.lsp.buf.references(nil, { loclist = true })
 end, { desc = "Open [r]eferences" })
-
-require("lsp_lines").setup()
 
 vim.api.nvim_create_autocmd("TermOpen", {
   desc = "Open Terminal",
