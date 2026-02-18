@@ -277,7 +277,7 @@ local function filter_references()
   local client = clients[1]
 
   if not client then
-    vim.notify("No active LSP client found", vim.log.levels.ERROR)
+    print("No active LSP client found", vim.log.levels.ERROR)
     return
   end
 
@@ -288,20 +288,22 @@ local function filter_references()
 
   vim.lsp.buf_request(0, "textDocument/references", params, function(err, result)
     if err then
-      vim.notify("LSP Error: " .. err.message, vim.log.levels.ERROR)
+      print("LSP Error: " .. err.message, vim.log.levels.ERROR)
       return
     end
 
     if not result or vim.tbl_isempty(result) then
-      vim.notify("No references found", vim.log.levels.INFO)
+      print("No references found", vim.log.levels.INFO)
       return
     end
 
     local items = vim.lsp.util.locations_to_items(result, "utf-8")
-    local filtered_items = filter_files(items)
+    local current_file = vim.api.nvim_buf_get_name(0)
+    local is_in_test_folder = current_file:find "__tests__"
+    local filtered_items = is_in_test_folder and items or filter_files(items)
 
     if vim.tbl_isempty(filtered_items) then
-      vim.notify("All references were filtered out", vim.log.levels.WARN)
+      print("All references were filtered out", vim.log.levels.WARN)
       return
     end
 
@@ -355,7 +357,7 @@ local function definition_split()
   vim.lsp.buf.definition {
     on_list = function(options)
       if #options.items > 1 then
-        vim.notify("Multiple items found, opening first one", vim.log.levels.WARN)
+        print("Multiple items found, opening first one", vim.log.levels.WARN)
       end
 
       local item = options.items[1]
