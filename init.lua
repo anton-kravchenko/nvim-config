@@ -137,7 +137,40 @@ vim.keymap.set("n", "KL", vim.diagnostic.setloclist, { desc = "Opens variable ty
 vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Opens variable type hover" })
 vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "Go to [d]efintion" })
 vim.keymap.set("n", "<leader>ra", vim.lsp.buf.rename, { desc = "[R]ename symbol" })
-vim.api.nvim_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "gI", "<cmd>lua vim.lsp.buf.implementation()<CR>", { noremap = true, silent = true })
+
+local filter_files = function(items, exclude_patterns)
+  exclude_patterns = exclude_patterns or { "node_modules", "__tests__", "tests" }
+
+  return vim.tbl_filter(function(item)
+    for _, pattern in ipairs(exclude_patterns) do
+      if item.filename:find(pattern) then
+        return false
+      end
+    end
+
+    return true
+  end, items)
+end
+
+local function implementations_non_test(items)
+  local filtered_items = filter_files(items.items)
+
+  if #filtered_items == 0 then
+    print "No implementation found (after filtering tests)"
+  elseif #filtered_items == 1 then
+    local location = filtered_items[1]
+    vim.lsp.util.show_document(location.user_data, "utf-8", { focus = true, reuse_win = true })
+  else
+    vim.lsp.buf.implementation()
+  end
+end
+
+vim.keymap.set("n", "<leader>gi", function()
+  vim.lsp.buf.implementation {
+    on_list = implementations_non_test,
+  }
+end, { buffer = true, desc = "Go to filtered implementation" })
 
 -- Moving selected text
 vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")
@@ -265,17 +298,7 @@ local function filter_references()
     end
 
     local items = vim.lsp.util.locations_to_items(result, "utf-8")
-    local filtered_items = vim.tbl_filter(function(item)
-      local exclude_patterns = { "node_modules", "__tests__", "tests" }
-
-      for _, pattern in ipairs(exclude_patterns) do
-        if item.filename:find(pattern) then
-          return false
-        end
-      end
-
-      return true
-    end, items)
+    local filtered_items = filter_files(items)
 
     if vim.tbl_isempty(filtered_items) then
       vim.notify("All references were filtered out", vim.log.levels.WARN)
@@ -365,18 +388,12 @@ local function toggle_terminal(terminal)
   terminal:toggle()
 end
 
-local function toggle_integrated_terminals()
+local function toggle_recent_terminal()
   if recent_terminal then
     recent_terminal:toggle()
   else
     print "No active terminals"
   end
-end
-
-function close_all_terminals()
-  horizontal_term:close()
-  vertical_term:close()
-  float_term:close()
 end
 
 function update_terminal_directory(dir)
@@ -414,12 +431,12 @@ vim.keymap.set({ "n", "t" }, "<leader><leader>", clear, {})
 -- Quit terminal mode and hide all integrated terminals
 vim.keymap.set("t", "<C-Space>", function()
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
-  toggle_integrated_terminals()
+  toggle_recent_terminal()
 end)
 
 -- Toggle recently opened integrated terminal
 vim.keymap.set("n", "<C-Space>", function()
-  toggle_integrated_terminals()
+  toggle_recent_terminal()
 end)
 
 vim.keymap.set("n", "ii", function()
