@@ -170,7 +170,7 @@ vim.keymap.set("n", "<leader>gi", function()
   vim.lsp.buf.implementation {
     on_list = implementations_non_test,
   }
-end, { buffer = true, desc = "Go to filtered implementation" })
+end, { desc = "Go to filtered implementation" })
 
 -- Moving selected text
 vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")
