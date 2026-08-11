@@ -1,7 +1,7 @@
 return {
   {
     "stevearc/conform.nvim",
-    event = "BufWritePre", -- uncomment for format on save
+    event = "BufWritePre",
     config = function()
       require "configs.conform"
     end,
@@ -13,11 +13,13 @@ return {
     "neovim/nvim-lspconfig",
     config = function()
       vim.lsp.config("*", {})
+
       vim.lsp.enable {
         "lua_ls",
         "pylsp",
         "ts_ls",
         "json_lsp",
+        "gopls",
       }
     end,
   },
@@ -37,6 +39,7 @@ return {
         "black",
         "yamlfmt",
         "yaml-language-server",
+        "gopls",
       },
     },
   },
@@ -56,6 +59,7 @@ return {
         "python",
         "javascript",
         "typescript",
+        "go",
       },
     },
   },

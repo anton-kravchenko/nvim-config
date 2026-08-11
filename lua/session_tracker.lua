@@ -76,7 +76,7 @@ local function stop_active_session()
   local last_session_duration_s = last_interaction_s - active_session_start_s
   is_session_active = false
 
-  if last_session_duration_s > 0 and last_session_duration_s < 60 * 60 * 2 then
+  if last_session_duration_s > 5 and last_session_duration_s < 60 * 60 * 2 then
     local latest_active_session = {
       from = pretty_time(active_session_start_s),
       to = pretty_time(last_interaction_s),

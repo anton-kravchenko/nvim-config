@@ -183,8 +183,11 @@ vim.keymap.set("n", "<leader>k", "<cmd>cprev<CR>")
 -- PWD
 vim.keymap.set("n", "pwd", ":pwd<CR>")
 
--- Delete without replacing clipboard contents
+-- Paste without replacing clipboard contents
 vim.keymap.set("v", "<leader>p", '"_dp')
+--
+-- Delete without replacing clipboard contents
+vim.keymap.set({ "v", "n" }, "<leader>d", '"_dd')
 
 -- Quit
 vim.keymap.set("n", "<leader>qa", ":qa!<CR>", { desc = "Force quit" })
@@ -207,6 +210,9 @@ local function jump_and_scroll(jump)
     vim.api.nvim_win_set_cursor(0, { new_cursor_line, cursor_column })
   end
 end
+
+vim.keymap.set("n", "<Leader>ma", "ma", { desc = "Set mark a" })
+vim.keymap.set("n", "<Leader>mg", "'a", { desc = "Jump to mark a" })
 
 vim.keymap.set("n", "m", function()
   jump_and_scroll(5)
@@ -242,7 +248,8 @@ require("gitsigns").setup {
 }
 
 -- Status line
-local background = "#171b20"
+-- local background = "#171b20"
+local background = "#1B1E28"
 local text_color = "#00f788"
 
 require("hardline").setup {
@@ -277,7 +284,7 @@ local function filter_references()
   local client = clients[1]
 
   if not client then
-    print("No active LSP client found", vim.log.levels.ERROR)
+    print "No active LSP client found"
     return
   end
 
@@ -288,12 +295,12 @@ local function filter_references()
 
   vim.lsp.buf_request(0, "textDocument/references", params, function(err, result)
     if err then
-      print("LSP Error: " .. err.message, vim.log.levels.ERROR)
+      print("LSP Error: " .. err.message)
       return
     end
 
     if not result or vim.tbl_isempty(result) then
-      print("No references found", vim.log.levels.INFO)
+      print "No references found"
       return
     end
 
@@ -303,7 +310,7 @@ local function filter_references()
     local filtered_items = is_in_test_folder and items or filter_files(items)
 
     if vim.tbl_isempty(filtered_items) then
-      print("All references were filtered out", vim.log.levels.WARN)
+      print(string.format("All references were filtered out (%s)", #items))
       return
     end
 
@@ -347,6 +354,12 @@ vim.keymap.set("n", "<leader>fs", function()
     search_dirs = { vim.fn.getcwd() .. "/src" },
   }
 end, { desc = "Live grep in ./src folder" })
+vim.keymap.set("n", "<leader>ft", function()
+  telescope_builtin.live_grep {
+    default_text = " ",
+    search_dirs = { vim.fn.getcwd() .. "/__tests__" },
+  }
+end, { desc = "Live grep in ./src folder" })
 
 vim.keymap.set("n", "<leader>sth", function()
   local hints = require "cheat_sheet_hints"
@@ -357,7 +370,7 @@ local function definition_split()
   vim.lsp.buf.definition {
     on_list = function(options)
       if #options.items > 1 then
-        print("Multiple items found, opening first one", vim.log.levels.WARN)
+        print "Multiple items found, opening first one"
       end
 
       local item = options.items[1]
@@ -375,6 +388,7 @@ local Terminal = require("toggleterm.terminal").Terminal
 
 local horizontal_term = Terminal:new { direction = "horizontal" }
 local vertical_term = Terminal:new { direction = "vertical" }
+local vertical_term_claude = Terminal:new { direction = "vertical", cmd = "claude" }
 local float_term = Terminal:new { direction = "float", float_opts = { border = "curved", winblend = 3 } }
 
 local recent_terminal = nil
@@ -402,6 +416,7 @@ function update_terminal_directory(dir)
   horizontal_term.dir = dir
   vertical_term.dir = dir
   float_term.dir = dir
+  vertical_term_claude.dir = dir
 end
 
 vim.keymap.set("n", "<leader>gs", function()
@@ -416,6 +431,10 @@ vim.keymap.set("n", "<leader>tr", function()
   toggle_terminal(vertical_term)
 end, { desc = "Open Te[r]minal" })
 
+vim.keymap.set("n", "<leader>cl", function()
+  toggle_terminal(vertical_term_claude)
+end, { desc = "Open Te[r]minal" })
+
 -- Exit insert mode in terminal
 vim.keymap.set("t", "fd", "<C-\\><C-n>")
 
@@ -428,7 +447,7 @@ local function clear()
 end
 
 vim.keymap.set("n", "clear", clear, {})
-vim.keymap.set({ "n", "t" }, "<leader><leader>", clear, {})
+vim.keymap.set({ "t" }, "<leader><leader>", clear, {})
 
 -- Quit terminal mode and hide all integrated terminals
 vim.keymap.set("t", "<C-Space>", function()
@@ -463,3 +482,6 @@ vim.keymap.set("n", "<leader>stc", ":ST current<CR>", { desc = "Show current ses
 vim.keymap.set("n", "<leader>stt", ":ST show<CR>", { desc = "Show today's timeline" })
 
 vim.keymap.set("n", "<leader>stt", ":ST show<CR>", { desc = "Show today's timeline" })
+
+-- Fixes shortkeys while terminal is being flooded
+vim.o.lazyredraw = true

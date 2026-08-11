@@ -8,6 +8,7 @@ local options = {
     markdown = { "prettier" },
     json = { "prettier" },
     python = { "black" },
+    go = { "goimports", "gofmt" },
   },
 
   format_on_save = {
