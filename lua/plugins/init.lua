@@ -199,4 +199,30 @@ return {
       }
     end,
   },
+  {
+    "ibhagwan/fzf-lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "FzfLua",
+    opts = {
+      file_ignore_patterns = {
+        "node_modules/",
+        "%.git/",
+        "%.kube/",
+        "%.cargo/",
+      },
+    },
+    config = function()
+      require("fzf-lua").setup {}
+    end,
+  },
+  {
+    "toppair/peek.nvim",
+    event = { "VeryLazy" },
+    build = "deno task --quiet build:fast",
+    config = function()
+      require("peek").setup { app = "browser" }
+      vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
+      vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
+    end,
+  },
 }

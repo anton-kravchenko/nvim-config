@@ -447,7 +447,7 @@ local function clear()
 end
 
 vim.keymap.set("n", "clear", clear, {})
-vim.keymap.set({ "t" }, "<leader><leader>", clear, {})
+vim.keymap.set({ "t" }, "<leader><leader><leader>", clear, {})
 
 -- Quit terminal mode and hide all integrated terminals
 vim.keymap.set("t", "<C-Space>", function()
@@ -471,6 +471,15 @@ vim.keymap.set("v", "v", "<Esc>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>sp", ":SwaggerPreviewToggle<CR>", { desc = "Toggle swagger preview" })
 require("swagger-preview").setup { port = 8000, host = "localhost" }
 
+-- Markdown preview
+vim.keymap.set("n", "<leader>mp", function()
+  if require("peek").is_open() then
+    require("peek").close()
+  else
+    require("peek").open()
+  end
+end, { desc = "Toggle markdown preview" })
+
 -- Disable replacing clipboard with the context of replacing text when pasting
 vim.keymap.set("x", "p", function()
   return 'pgv"' .. vim.v.register .. "y"
@@ -482,6 +491,13 @@ vim.keymap.set("n", "<leader>stc", ":ST current<CR>", { desc = "Show current ses
 vim.keymap.set("n", "<leader>stt", ":ST show<CR>", { desc = "Show today's timeline" })
 
 vim.keymap.set("n", "<leader>stt", ":ST show<CR>", { desc = "Show today's timeline" })
+vim.keymap.set("n", "<F13>", "<C-i>", { noremap = true }) -- Fixes Ctrl+I navigation
 
 -- Fixes shortkeys while terminal is being flooded
 vim.o.lazyredraw = true
+
+vim.keymap.set("n", "<leader>fzf", function()
+  require("fzf-lua").files {
+    cwd = vim.fn.expand "~",
+  }
+end, { desc = "Fuzzy find files in home directory" })
